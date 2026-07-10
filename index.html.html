@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sagarika Prabhakar — About & Portfolio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: #f5f7fa;
+    color: #1a1a1a;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 50px 30px;
+  }
+  .header {
+    border-bottom: 2px solid #1F4E79;
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+  }
+  .header h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #1F4E79;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .header .tagline {
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .header .contact {
+    font-size: 13px;
+    color: #666;
+  }
+  .header .contact a {
+    color: #1F4E79;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .header .contact a:hover {
+    border-bottom-color: #1F4E79;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: #2E75B6;
+    transform: scaleY(0);
+    transition: transform 0.25s ease;
+    transform-origin: top;
+  }
+  .card:hover {
+    box-shadow: 0 4px 16px rgba(31, 78, 121, 0.1);
+    transform: translateY(-2px);
+  }
+  .card:hover::before {
+    transform: scaleY(1);
+  }
+  .card .card-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #1F4E79;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .card .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1F4E79;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+  .card .card-preview {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+  }
+  .card .card-hint {
+    font-size: 11px;
+    color: #999;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Modal / Expanded panel */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.active {
+    display: flex;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal {
+    background: white;
+    border-radius: 10px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 36px;
+    position: relative;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+  .modal-close:hover {
+    color: #1F4E79;
+    background: #f0f4f8;
+  }
+  .modal h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1F4E79;
+    margin-bottom: 6px;
+    padding-right: 40px;
+  }
+  .modal .modal-subtitle {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+  .modal p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .intro-item {
+    background: #f7fafd;
+    border-left: 3px solid #2E75B6;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .intro-item .label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .intro-item .value {
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  .intro-item .detail {
+    font-size: 12px;
+    color: #666;
+    margin-top: 3px;
+  }
+  .highlight-list {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .highlight-list li {
+    padding: 10px 0;
+    padding-left: 22px;
+    position: relative;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.65;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .highlight-list li:last-child { border-bottom: none; }
+  .highlight-list li::before {
+    content: "\25AA";
+    color: #2E75B6;
+    position: absolute;
+    left: 0;
+    top: 10px;
+    font-size: 14px;
+  }
+  .project {
+    background: #f9fbfd;
+    border: 1px solid #e5eaf0;
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .project.featured {
+    background: linear-gradient(to right, #eef4fa, #f7fbff);
+    border-left: 3px solid #1F4E79;
+  }
+  .project .project-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1F4E79;
+    margin-bottom: 4px;
+  }
+  .project .project-meta {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+  .project .project-body {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.65;
+  }
+  .project .tag {
+    display: inline-block;
+    background: white;
+    border: 1px solid #d0dae5;
+    color: #1F4E79;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .stack-group {
+    margin-bottom: 18px;
+  }
+  .stack-group-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .stack span {
+    background: #f5f8fc;
+    border: 1px solid #d0dae5;
+    color: #333;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 4px;
+  }
+  .closing-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-left: 3px solid #1F4E79;
+    border-radius: 8px;
+    padding: 22px 26px;
+    font-size: 14px;
+    color: #333;
+    font-style: italic;
+    line-height: 1.75;
+    margin-top: 30px;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #dfe4ea;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+  }
+  .subtitle-instruction {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  @media (max-width: 640px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .intro-grid { grid-template-columns: 1fr; }
+    .container { padding: 30px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Sagarika Prabhakar</h1>
+    <div class="tagline">Strategy Consultant · Software Engineering Foundation · AI-First Product Operator</div>
+    <div class="contact">
+      Bangalore &nbsp;·&nbsp; <a href="mailto:sagarika2905@gmail.com">sagarika2905@gmail.com</a> &nbsp;·&nbsp; +91 8072148895 &nbsp;·&nbsp; <a href="https://linkedin.com/in/sagarika-prabhakar-15b85b117" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="subtitle-instruction">Tap any card to explore.</div>
+
+  <div class="card-grid">
+
+    <div class="card" onclick="openModal('intro')">
+      <div class="card-icon">01</div>
+      <div class="card-title">Quick Intro</div>
+      <div class="card-preview">Who I am, what I do, and where I've built my chops so far.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+    <div class="card" onclick="openModal('highlights')">
+      <div class="card-icon">02</div>
+      <div class="card-title">Career Highlights</div>
+      <div class="card-preview">Five things I've done that best represent my range.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+    <div class="card" onclick="openModal('ai-projects')">
+      <div class="card-icon">03</div>
+      <div class="card-title">AI &amp; Product Projects</div>
+      <div class="card-preview">Claude-powered tools, agentic architectures, data product blueprints.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+    <div class="card" onclick="openModal('strategy-projects')">
+      <div class="card-icon">04</div>
+      <div class="card-title">Strategy &amp; Engineering Projects</div>
+      <div class="card-preview">Executive-grade strategy work and enterprise engineering at scale.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+    <div class="card" onclick="openModal('stack')">
+      <div class="card-icon">05</div>
+      <div class="card-title">Stack &amp; Tools</div>
+      <div class="card-preview">The AI, engineering, and strategy stack I work across.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+    <div class="card" onclick="openModal('closing')">
+      <div class="card-icon">06</div>
+      <div class="card-title">Why Kapture CX</div>
+      <div class="card-preview">Why this role, why now, and why I think I'd fit.</div>
+      <div class="card-hint">Tap to open &rarr;</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Sagarika Prabhakar &nbsp;&middot;&nbsp; sagarika2905@gmail.com &nbsp;&middot;&nbsp; Prepared for Kapture CX application
+  </div>
+
+</div>
+
+<!-- MODAL: Quick Intro -->
+<div class="modal-overlay" id="modal-intro" onclick="closeIfOverlay(event, 'intro')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('intro')">&times;</button>
+    <h2>Quick Intro</h2>
+    <div class="modal-subtitle">Who I am and where I've built my chops</div>
+    <p>I work at the intersection of strategy, product, data, and AI &mdash; comfortable moving between analytical work, product thinking, and hands-on delivery. Five years of experience so far, spanning strategy consulting at Accenture and software engineering at EY. I'm most energised by ambiguous, high-scope problems where the playbook is still being written.</p>
+    <div class="intro-grid">
+      <div class="intro-item">
+        <div class="label">Experience</div>
+        <div class="value">5 years</div>
+        <div class="detail">Strategy consulting + software engineering</div>
+      </div>
+      <div class="intro-item">
+        <div class="label">Education</div>
+        <div class="value">IIM Bangalore, MBA (2024)</div>
+        <div class="detail">B.Tech, Electronics &amp; Communication (2019)</div>
+      </div>
+      <div class="intro-item">
+        <div class="label">Current Role</div>
+        <div class="value">Strategy Analyst</div>
+        <div class="detail">Accenture Strategy &amp; Consulting &mdash; Consumer Goods &amp; Retail Domain</div>
+      </div>
+      <div class="intro-item">
+        <div class="label">Location</div>
+        <div class="value">Bangalore, India</div>
+        <div class="detail">Open to on-site &amp; hybrid</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Highlights -->
+<div class="modal-overlay" id="modal-highlights" onclick="closeIfOverlay(event, 'highlights')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('highlights')">&times;</button>
+    <h2>Career Highlights</h2>
+    <div class="modal-subtitle">Five things that best represent my range</div>
+    <ul class="highlight-list">
+      <li>Identified a $100&ndash;165M growth opportunity for a $37Bn global consumer client; drove it through C-suite approval end-to-end.</li>
+      <li>Architected an agentic AI product methodology now adopted as Accenture's standard for AI transformation engagements.</li>
+      <li>Shipped a Claude-powered production tool that's in active use across a 70-person team.</li>
+      <li>Delivered 16% marketing ROI improvement across 6+ brands for a $260Bn F&amp;B major; led international market expansion across UK, France, and South Korea.</li>
+      <li>Designed database architecture handling 20Bn+ records for a banking client (40Mn+ users); increased throughput by 75%.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- MODAL: AI & Product Projects -->
+<div class="modal-overlay" id="modal-ai-projects" onclick="closeIfOverlay(event, 'ai-projects')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('ai-projects')">&times;</button>
+    <h2>AI &amp; Product Projects</h2>
+    <div class="modal-subtitle">Where I've been building the intelligent layer</div>
+
+    <div class="project featured">
+      <div class="project-title">Claude-Powered Hiring Intelligence Tool</div>
+      <div class="project-meta">2024 &middot; Applied AI &middot; Internal Product at Accenture</div>
+      <div class="project-body">
+        Identified a workflow gap in the hiring process &mdash; recruiter time being spent on early-stage CV screening rather than judgment-heavy interviews. Prototyped a Claude-powered screening and candidate scoring tool, iterated with users through rapid feedback loops, and drove adoption without a mandate. The tool now sits inside the standard hiring workflow across a 70-person team and has screened 200+ candidates to date. Full lifecycle ownership: problem discovery, prompt engineering, evaluation design, user testing, and change management.
+      </div>
+      <span class="tag">Claude API</span>
+      <span class="tag">Prompt Engineering</span>
+      <span class="tag">Product Design</span>
+      <span class="tag">Adoption Drive</span>
+    </div>
+
+    <div class="project featured">
+      <div class="project-title">Agentic AI Product Methodology &mdash; Global Life Sciences Major</div>
+      <div class="project-meta">2024 &middot; AI Architecture &middot; Fortune 100 Client Engagement</div>
+      <div class="project-body">
+        Architected an AI-first product methodology from scratch for a Fortune 100 Life Sciences client. Decomposed 200+ enterprise processes to Level 6 task granularity to identify 30 high-priority automation opportunities. Designed a three-layer agent framework &mdash; utility agents for atomic tasks, super agents for workflow orchestration, and orchestrator agents for cross-workflow reasoning. The framework has since been adopted as Accenture's standard methodology for AI transformation engagements across industries.
+      </div>
+      <span class="tag">Agentic Architecture</span>
+      <span class="tag">Enterprise AI</span>
+      <span class="tag">Product Methodology</span>
+      <span class="tag">Reusable IP</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Data Product Blueprint &mdash; Commercial Investment Optimisation</div>
+      <div class="project-meta">2024&ndash;25 &middot; Strategy + Data Product &middot; $37Bn Global Consumer Client</div>
+      <div class="project-body">
+        Owned the data product blueprint for a strategic initiative that identified a $100&ndash;165M growth opportunity through commercial investment optimisation. Drafted Business Requirement Documents (BRDs) and Technical Requirement Documents (TRDs), designed the entity relationship model, and built data lineage diagrams spanning trade, media, and DME investment flows. Translated an ambiguous commercial problem into functional and technical specifications ready for engineering delivery.
+      </div>
+      <span class="tag">BRDs / TRDs</span>
+      <span class="tag">Data Product Design</span>
+      <span class="tag">Entity Relationship Modelling</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Data Productisation Roadmap</div>
+      <div class="project-meta">2025 &middot; Strategy &middot; Accenture Internal Initiative</div>
+      <div class="project-body">
+        Core contributor on Accenture's data productisation initiative &mdash; running build/buy/partner assessments across third-party data vendors, structuring the case for a new revenue line, and designing the intelligence layer architecture. The initiative is being actively pursued by senior leadership as a strategic bet on productised offerings.
+      </div>
+      <span class="tag">Product Strategy</span>
+      <span class="tag">Build/Buy/Partner</span>
+      <span class="tag">Data Moat</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Strategy & Engineering Projects -->
+<div class="modal-overlay" id="modal-strategy-projects" onclick="closeIfOverlay(event, 'strategy-projects')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('strategy-projects')">&times;</button>
+    <h2>Strategy &amp; Engineering Projects</h2>
+    <div class="modal-subtitle">Executive strategy work and enterprise engineering at scale</div>
+
+    <div class="project">
+      <div class="project-title">Marketing ROI &amp; Multi-Brand Attribution &mdash; Global F&amp;B Major</div>
+      <div class="project-meta">2024 &middot; Strategy &middot; $260Bn Revenue Client</div>
+      <div class="project-body">
+        Delivered 16% improvement in marketing ROI and 5&ndash;10% incremental revenue uplift by designing a multi-brand attribution framework across 6+ brands and 4 India zones. Led data orchestration in international market expansion (UK, France, South Korea) &mdash; sized market opportunity, benchmarked competitive intensity, and structured launch playbooks.
+      </div>
+      <span class="tag">Attribution Modelling</span>
+      <span class="tag">Multi-Brand Strategy</span>
+      <span class="tag">International GTM</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Enterprise Data &amp; Engineering &mdash; EY GDS</div>
+      <div class="project-meta">2019&ndash;2022 &middot; Software Engineering &middot; Banking &amp; Government Clients</div>
+      <div class="project-body">
+        Designed database architecture handling 20Bn+ records for a banking client (40Mn+ users) &mdash; increased throughput by 75% and reduced downtime by 20%. Developed a migration tool that moved 200TB of legacy data and 60Bn+ records, saving 9,000+ manhours. Coordinated across 30+ vendor integrations for the UAE Ministry of Higher Education, enabling AED 250Mn in revenue. Incorporated CI/CD in DevOps, reducing deployment time from 5 hours to 15 minutes with 25&times; cost decrease.
+      </div>
+      <span class="tag">Database Architecture</span>
+      <span class="tag">Enterprise Scale</span>
+      <span class="tag">CI/CD &amp; DevOps</span>
+    </div>
+
+    <div class="project">
+      <div class="project-title">Customer Reactivation Growth Pilot &mdash; Beauty &amp; Personal Care</div>
+      <div class="project-meta">2023 &middot; Consulting Internship &middot; Strategy&amp; (PwC)</div>
+      <div class="project-body">
+        Drove 20% conversion uplift in a customer reactivation pilot for a INR 300 Cr client by deploying RFM-based segmentation across 50+ stores. Designed a partner-led acquisition program with 8+ adjacent brands delivering 4x ROI. Validated hypothesis through structured experimentation before scaling.
+      </div>
+      <span class="tag">Growth Pilot</span>
+      <span class="tag">RFM Segmentation</span>
+      <span class="tag">Partner Program</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Stack & Tools -->
+<div class="modal-overlay" id="modal-stack" onclick="closeIfOverlay(event, 'stack')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('stack')">&times;</button>
+    <h2>Stack &amp; Tools</h2>
+    <div class="modal-subtitle">Hands-on across AI, engineering, and strategy</div>
+
+    <div class="stack-group">
+      <div class="stack-group-label">AI &amp; Product</div>
+      <div class="stack">
+        <span>Claude &amp; Claude API</span>
+        <span>ChatGPT / GPT-4</span>
+        <span>Copilot</span>
+        <span>Agentic AI Architecture</span>
+        <span>Prompt Engineering</span>
+        <span>Evaluation Design</span>
+      </div>
+    </div>
+
+    <div class="stack-group">
+      <div class="stack-group-label">Engineering &amp; Data</div>
+      <div class="stack">
+        <span>Java</span>
+        <span>JavaScript</span>
+        <span>REST APIs</span>
+        <span>SQL</span>
+        <span>Snowflake</span>
+        <span>Power BI</span>
+        <span>JIRA / Git</span>
+        <span>Microsoft O365 / SharePoint</span>
+      </div>
+    </div>
+
+    <div class="stack-group">
+      <div class="stack-group-label">Strategy &amp; Consulting</div>
+      <div class="stack">
+        <span>GTM Strategy</span>
+        <span>Growth Strategy</span>
+        <span>Brand Strategy</span>
+        <span>Marketing Analytics</span>
+        <span>Program Management</span>
+        <span>Executive Storyboarding</span>
+        <span>Cross-functional Delivery</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Closing -->
+<div class="modal-overlay" id="modal-closing" onclick="closeIfOverlay(event, 'closing')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('closing')">&times;</button>
+    <h2>Why Kapture CX</h2>
+    <div class="modal-subtitle">Why this role, and why I think I'd fit</div>
+    <p>Kapture CX is a growing startup building in the AI space at exactly the right moment. My conviction is that AI models are increasingly commoditised &mdash; the real moat and differentiation now lies in the <em>intelligence layer</em> built on top of them: the workflows, evaluation systems, data products, and product thinking that turn raw model capability into differentiated customer value. That is exactly what Kapture CX is building, and it is exactly the kind of role I want to be in.</p>
+    <p>I believe I bring the relevant skillsets for this: I've been working at the intersection of strategy, data, AI, and execution &mdash; comfortable moving between analytical work, product thinking, and hands-on delivery. I also bring domain knowledge in Consumer Goods and Retail, which is one of the segments Kapture CX is playing in.</p>
+    <p>Thank you for the opportunity.</p>
+  </div>
+</div>
+
+<script>
+  function openModal(id) {
+    var modal = document.getElementById('modal-' + id);
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    var modal = document.getElementById('modal-' + id);
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function closeIfOverlay(event, id) {
+    if (event.target === event.currentTarget) {
+      closeModal(id);
+    }
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var open = document.querySelectorAll('.modal-overlay.active');
+      for (var i = 0; i < open.length; i++) {
+        open[i].classList.remove('active');
+      }
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+
+</body>
+</html>
